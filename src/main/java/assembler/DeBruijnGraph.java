@@ -8,8 +8,8 @@ import java.util.List;
  * DeBruijn Graph Model
  */
 public class DeBruijnGraph {
-    //adjacency list representation of edges (vertex -> edges list)
-    private ArrayList<Integer>[] adjacencyList;
+    //list of edges (src, dest)
+    private List<Integer[]> edges;
     //kmer values
     private List<String> kmers;
 
@@ -26,10 +26,10 @@ public class DeBruijnGraph {
 
     //build adjacency list from list of kmers
     private void buildAdjacencyList(List<String> refEdges) {
-        adjacencyList = new ArrayList[kmers.size()];
+        edges = new ArrayList<>();
         for (int i = 0; i < kmers.size(); i++) {
             String kmer1 = kmers.get(i);
-            adjacencyList[i] = new ArrayList<>();
+
             for (int j = 0; j < kmers.size(); j++) {
                 //skip same vertex
                 if (i == j) {
@@ -40,43 +40,51 @@ public class DeBruijnGraph {
                 //check for existence of edge in ref kmers for k-1mer case
                 if (kmer1.endsWith(kmer2.substring(0, kmer2.length() - 1))
                         && (refEdges.isEmpty() || refEdges.contains(kmer1.concat(kmer2.substring(kmer2.length() - 1))))) {
-                    adjacencyList[i].add(j);
+                    Integer[] edge = new Integer[2];
+                    edge[0] = i;//src
+                    edge[1] = j;//dest
+                    edges.add(edge);
                 }
             }
         }
     }
 
+    /**
+     * To display the graph
+     */
     public void print() {
-        for (int i = 0; i < adjacencyList.length; i++) {
-            System.out.println(i + " -> " + adjacencyList[i]);
+        for (int i = 0; i < edges.size(); i++) {
+            Integer[] edge = edges.get(i);
+            System.out.println(edge[0] + " -> " + edge[1]);
         }
     }
 
     public int getNoOfVertices() {
-        return adjacencyList.length;
+        return kmers.size();
+    }
+
+    public int getNoOfEdges() {
+        return edges.size();
     }
 
     /**
-     * get list of connected vertices from source vertex
-     * @param vertex
+     * returns array of edges (src -> dest)
      * @return
      */
-    public ArrayList<Integer> getEdges(int vertex) {
-        if (vertex < adjacencyList.length) {
-            return adjacencyList[vertex];
+    public int[][] getEdges() {
+        int[][] edgesArr = new int[edges.size()][2];
+        for (int i = 0; i < edges.size(); i++) {
+            edgesArr[i][0] = edges.get(i)[0];
+            edgesArr[i][1] = edges.get(i)[1];
         }
-        return null;
+        return edgesArr;
     }
 
     /**
-     * get kmer value of a vertex
-     * @param vertex
+     * returns kmers values of vertices
      * @return
      */
-    public String getKmerValue(int vertex) {
-        if (vertex < kmers.size()) {
-            return kmers.get(vertex);
-        }
-        return null;
+    public List<String> getVertices() {
+        return kmers;
     }
 }

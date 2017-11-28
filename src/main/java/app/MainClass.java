@@ -35,5 +35,11 @@ public class MainClass {
         System.out.println("K-1mer graph:");
         subkmerGraph.print();
         //check Eulerian path*/
+
+        //sample graph usage:
+        //get edges array
+        int[][] edges = subkmerGraph.getEdges();
+        //get vertices (kmers)
+        List<String> vertices = subkmerGraph.getVertices();
     }
 }
