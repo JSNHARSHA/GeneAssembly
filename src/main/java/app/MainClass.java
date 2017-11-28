@@ -31,9 +31,9 @@ public class MainClass {
         List<String> subkmers = SequenceProcessorUtil.generateKmers(kmers, 2);
         System.out.println("Set of K-1mers:");
         System.out.println(subkmers);
-        DeBruijnGraph subkmerGraph = new DeBruijnGraph(subkmers);
+        DeBruijnGraph subkmerGraph = new DeBruijnGraph(subkmers, kmers);
         System.out.println("K-1mer graph:");
         subkmerGraph.print();
-        //check Eulerian path
+        //check Eulerian path*/
     }
 }

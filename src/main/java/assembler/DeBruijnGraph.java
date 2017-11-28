@@ -1,28 +1,32 @@
 package assembler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * DeBruijn Graph Model
  */
 public class DeBruijnGraph {
-    //total vertices
-    private int noOfVertices;
     //adjacency list representation of edges (vertex -> edges list)
     private ArrayList<Integer>[] adjacencyList;
-    //kmer values of each vertex
+    //kmer values
     private List<String> kmers;
 
+    //constructing Debruijn graph from kmers
     public DeBruijnGraph(List<String> kmers) {
+        this(kmers, Collections.emptyList());
+    }
+
+    //constructing Debruijn graph from k-1mers and ref kmers
+    public DeBruijnGraph(List<String> kmers, List<String> refEdges) {
         this.kmers = kmers;
-        this.noOfVertices = kmers.size();
-        buildAdjacencyList();
+        buildAdjacencyList(refEdges);
     }
 
     //build adjacency list from list of kmers
-    private void buildAdjacencyList() {
-        adjacencyList = new ArrayList[noOfVertices];
+    private void buildAdjacencyList(List<String> refEdges) {
+        adjacencyList = new ArrayList[kmers.size()];
         for (int i = 0; i < kmers.size(); i++) {
             String kmer1 = kmers.get(i);
             adjacencyList[i] = new ArrayList<>();
@@ -33,7 +37,9 @@ public class DeBruijnGraph {
                 }
                 String kmer2 = kmers.get(j);
                 //add an edge when vertex 1 suffix (length k-1) is matching vertex 2 prefix
-                if(kmer1.endsWith(kmer2.substring(0, kmer2.length() - 1))) {
+                //check for existence of edge in ref kmers for k-1mer case
+                if (kmer1.endsWith(kmer2.substring(0, kmer2.length() - 1))
+                        && (refEdges.isEmpty() || refEdges.contains(kmer1.concat(kmer2.substring(kmer2.length() - 1))))) {
                     adjacencyList[i].add(j);
                 }
             }
@@ -41,13 +47,13 @@ public class DeBruijnGraph {
     }
 
     public void print() {
-        for (int i = 0; i < noOfVertices; i++) {
+        for (int i = 0; i < adjacencyList.length; i++) {
             System.out.println(i + " -> " + adjacencyList[i]);
         }
     }
 
     public int getNoOfVertices() {
-        return noOfVertices;
+        return adjacencyList.length;
     }
 
     /**
@@ -56,7 +62,7 @@ public class DeBruijnGraph {
      * @return
      */
     public ArrayList<Integer> getEdges(int vertex) {
-        if (vertex < noOfVertices) {
+        if (vertex < adjacencyList.length) {
             return adjacencyList[vertex];
         }
         return null;
@@ -68,7 +74,7 @@ public class DeBruijnGraph {
      * @return
      */
     public String getKmerValue(int vertex) {
-        if (vertex < noOfVertices) {
+        if (vertex < kmers.size()) {
             return kmers.get(vertex);
         }
         return null;

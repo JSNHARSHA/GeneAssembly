@@ -13,7 +13,12 @@ public class ShotgunSequenceSimulator implements  SequenceSimulator{
     public List<String> generateSequences(String referenceGenome, int readLength, int count) {
         List<String> sequences = new ArrayList<>();
         Random rand = new Random();
-        int i = count;
+        //add the prefix sequence
+        sequences.add(referenceGenome.substring(0, readLength));
+        //add the suffix sequence
+        sequences.add(referenceGenome.substring(referenceGenome.length() - readLength,
+                referenceGenome.length()));
+        int i = count - 2;
         while (i > 0) {
             int start = rand.nextInt(referenceGenome.length() - readLength + 1);
             String randSequence = referenceGenome.substring(start, start + readLength);
