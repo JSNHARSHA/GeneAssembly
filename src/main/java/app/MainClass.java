@@ -1,10 +1,12 @@
 package app;
 
 import assembler.DeBruijnGraph;
+import assembler.DenoSequenceAssembler;
 import assembler.SequenceProcessorUtil;
 import simulator.SequenceSimulator;
 import simulator.ShotgunSequenceSimulator;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,9 +38,12 @@ public class MainClass {
         subkmerGraph.print();
         //check Eulerian path*/
 
+        DenoSequenceAssembler assembler = new DenoSequenceAssembler();
+
         //sample graph usage:
         //get edges array
         int[][] edges = subkmerGraph.getEdges();
+
         //get vertices (kmers)
         List<String> vertices = subkmerGraph.getVertices();
     }
