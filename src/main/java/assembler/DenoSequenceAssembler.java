@@ -66,6 +66,10 @@ public class DenoSequenceAssembler{
     public String EulerianPath(int edges[][], List<String> vertices)
     {
         int startIndex = findStart(edges, vertices);
+
+        if(startIndex == -1)
+            return "no";
+
         int visitHistory[] = new int[edges.length];
         int visitCount = 0;
 

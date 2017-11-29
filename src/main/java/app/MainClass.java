@@ -7,7 +7,6 @@ import simulator.SequenceSimulator;
 import simulator.ShotgunSequenceSimulator;
 import aligner.NeedlemanWunsch;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,11 +44,19 @@ public class MainClass {
         DenoSequenceAssembler assembler = new DenoSequenceAssembler(subkmerGraph);
         String eulerPath = assembler.EulerianPath(assembler.getGraph().getEdges(), assembler.getGraph().getVertices());
 
-        NeedlemanWunsch needlemanWunsch = new NeedlemanWunsch();
-        //pass query as first param, reference as second param
-        needlemanWunsch.align(eulerPath, referenceGenome);
-        System.out.println("\nSequences after alignment: ");
-        System.out.println("Original\t"+needlemanWunsch.getReference()+"\nComputed\t"+needlemanWunsch.getQuery());
-        System.out.println("Alignment score "+needlemanWunsch.getScore());
+        if(eulerPath.equals("no"))
+        {
+            System.out.println("No Euler Path exists for the above graph");
+        }
+
+        else {
+            System.out.println("The Euler Path is:\t" + eulerPath);
+            NeedlemanWunsch needlemanWunsch = new NeedlemanWunsch();
+            //pass query as first param, reference as second param
+            needlemanWunsch.align(eulerPath, referenceGenome);
+            System.out.println("\nSequences after alignment: ");
+            System.out.println("Original\t" + needlemanWunsch.getReference() + "\nComputed\t" + needlemanWunsch.getQuery());
+            System.out.println("Alignment score " + needlemanWunsch.getScore());
+        }
     }
 }
