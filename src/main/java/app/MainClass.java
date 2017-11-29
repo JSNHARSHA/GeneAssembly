@@ -5,6 +5,7 @@ import assembler.DenoSequenceAssembler;
 import assembler.SequenceProcessorUtil;
 import simulator.SequenceSimulator;
 import simulator.ShotgunSequenceSimulator;
+import aligner.NeedlemanWunsch;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,13 +39,14 @@ public class MainClass {
         subkmerGraph.print();
         //check Eulerian path*/
 
-        DenoSequenceAssembler assembler = new DenoSequenceAssembler();
+        DenoSequenceAssembler assembler = new DenoSequenceAssembler(subkmerGraph);
+        String eulerPath = assembler.EulerianPath(assembler.getGraph().getEdges(), assembler.getGraph().getVertices());
 
-        //sample graph usage:
-        //get edges array
-        int[][] edges = subkmerGraph.getEdges();
-
-        //get vertices (kmers)
-        List<String> vertices = subkmerGraph.getVertices();
+        NeedlemanWunsch needlemanWunsch = new NeedlemanWunsch();
+        //pass query as first param, reference as second param
+        needlemanWunsch.align(eulerPath, "ACGTCGGTT");
+        System.out.println("\nSequences after alignment: ");
+        System.out.println("Original\t"+needlemanWunsch.getReference()+"\nComputed\t"+needlemanWunsch.getQuery());
+        System.out.println("Alignment score "+needlemanWunsch.getScore());
     }
 }
