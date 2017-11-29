@@ -15,9 +15,12 @@ import java.util.List;
  */
 public class MainClass {
     public static void main(String args[]) {
+        //Get all the input from user
+        String referemceGenome = "ACGTCGGTT";
+
         //simulate shotgun sequence reads
         SequenceSimulator sequenceSimulator = new ShotgunSequenceSimulator();
-        List<String> sequences = sequenceSimulator.generateSequences("ACGTCGGTT", 5, 4);
+        List<String> sequences = sequenceSimulator.generateSequences(referemceGenome, 5, 4);
         System.out.println("Shotgun Sequence Reads:");
         System.out.println(sequences);
 
@@ -44,7 +47,7 @@ public class MainClass {
 
         NeedlemanWunsch needlemanWunsch = new NeedlemanWunsch();
         //pass query as first param, reference as second param
-        needlemanWunsch.align(eulerPath, "ACGTCGGTT");
+        needlemanWunsch.align(eulerPath, referemceGenome);
         System.out.println("\nSequences after alignment: ");
         System.out.println("Original\t"+needlemanWunsch.getReference()+"\nComputed\t"+needlemanWunsch.getQuery());
         System.out.println("Alignment score "+needlemanWunsch.getScore());
