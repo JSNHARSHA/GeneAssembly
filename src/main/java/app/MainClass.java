@@ -3,6 +3,7 @@ package app;
 import assembler.DeBruijnGraph;
 import assembler.DenoSequenceAssembler;
 import assembler.SequenceProcessorUtil;
+import plotter.PlotGraph;
 import simulator.SequenceSimulator;
 import simulator.ShotgunSequenceSimulator;
 import aligner.NeedlemanWunsch;
@@ -15,7 +16,7 @@ import java.util.List;
 public class MainClass {
     public static void main(String args[]) {
         //Get all the input from user
-        String referenceGenome = "ACGTCGGTT";
+        String referenceGenome = "GTCAGGTC";
 
         //simulate shotgun sequence reads
         SequenceSimulator sequenceSimulator = new ShotgunSequenceSimulator();
@@ -57,6 +58,11 @@ public class MainClass {
             System.out.println("\nSequences after alignment: ");
             System.out.println("Original\t" + needlemanWunsch.getReference() + "\nComputed\t" + needlemanWunsch.getQuery());
             System.out.println("Alignment score " + needlemanWunsch.getScore());
+
+            //Plot the graph
+            int[][] points = {{0,0}, {1,1}, {2,2}, {3,2}, {4,2}, {5,3}, {6,4}, {6,5}, {7,6}};
+            PlotGraph plotGraph = new PlotGraph();
+            plotGraph.plot(needlemanWunsch.getPoints());
         }
     }
 }

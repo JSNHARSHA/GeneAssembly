@@ -1,10 +1,14 @@
 package aligner;
 
+import java.io.CharArrayReader;
+import java.util.Arrays;
+
 public class NeedlemanWunsch {
 
     private String query;
     private String reference;
     private String score;
+    private int[][] points;
 
     public String getQuery() {
         return query;
@@ -19,17 +23,25 @@ public class NeedlemanWunsch {
     }
 
 
+    public int[][] getPoints() {
+        return points;
+    }
+
     public void align(String sequence1, String sequence2)
     {
         int gapPenalty = -2;
-        int numberOfGaps1 = 0;
-        int numberOfGaps2 = 0;
         int fMatrix[][] = new int[sequence1.length()+1][sequence2.length()+1];
         int fiMatrix[][] = new int[sequence1.length()+1][sequence2.length()+1];
         int fjMatrix[][] = new int[sequence1.length()+1][sequence2.length()+1];
         fMatrix[0][0] = 0;
         fiMatrix[0][0] = 0;
         fjMatrix[0][0] = 0;
+        int xy[][] = new int[sequence1.length()+sequence2.length()+3][2];
+        int xyPointer = 0;
+        int x=0, y=0;
+        xy[xyPointer][0] = x;
+        xy[xyPointer][1] = y;
+        xyPointer++;
         for(int i=1; i<sequence1.length()+1; i++)
         {
             fMatrix[i][0] = fMatrix[i-1][0] + gapPenalty;
@@ -58,21 +70,25 @@ public class NeedlemanWunsch {
                 fMatrix[i][j] = (align>=seq1Gap)?(align>=seq2Gap?align:seq2Gap):(seq1Gap>=seq2Gap?seq1Gap:seq2Gap);
                 if(fMatrix[i][j]==align)
                 {
+                    //System.out.println("align");
                     fiMatrix[i][j] = i-1;
                     fjMatrix[i][j] = j-1;
                 }
                 else if(fMatrix[i][j] == seq1Gap)
                 {
+                    //System.out.println("gap in seq1");
                     fiMatrix[i][j] = i;
                     fjMatrix[i][j] = j-1;
                 }
                 else if(fMatrix[i][j] == seq2Gap)
                 {
+                    //System.out.println("gap in seq2");
                     fiMatrix[i][j] = i-1;
                     fjMatrix[i][j] = j;
                 }
             }
         }
+
 
         String resultSequence1 = "";
         String resultSequence2 = "";
@@ -90,27 +106,51 @@ public class NeedlemanWunsch {
                 resultSequence2 += Character.toString(sequence2.charAt(j-1));
                 i = i-1;
                 j = j-1;
+
+                xy[xyPointer][0] = x++;
+                xy[xyPointer][1] = y++;
+                xyPointer++;
             }
             else if(i!=iTemp && j==jTemp)
             {
                 //gap in sequence 2
                 resultSequence1 += Character.toString(sequence1.charAt(i-1));
                 resultSequence2 += "_";
-                numberOfGaps2++;
                 i = i-1;
+
+                xy[xyPointer][1] = y;
+                xy[xyPointer][0] = x++;
+                xyPointer++;
+
+
             }
             else if(i==iTemp && j!=jTemp)
             {
                 //gap in sequence 1
                 resultSequence1 += "_";
                 resultSequence2 += Character.toString(sequence2.charAt(j-1));
-                numberOfGaps1++;
                 j = j-1;
+
+                //Assuming sequence 1 plot along y-axis
+                xy[xyPointer][1] = y++;
+                xy[xyPointer][0] = x;
+                xyPointer++;
+
+
             }
             if(i==0 && j==0)
             {
                 break;
             }
+        }
+
+        xyPointer--;
+        int shiftValue = xy[xyPointer][0];
+        System.out.println("Shift value: " + shiftValue);
+
+        for(int p=0;p<xy.length;p++)
+        {
+            System.out.println(xy[p][0] + "\t" + xy[p][1]);
         }
 
         StringBuffer sb1 = new StringBuffer(resultSequence1);
@@ -119,10 +159,21 @@ public class NeedlemanWunsch {
         sb2.reverse();
         resultSequence1 = sb1.toString();
         resultSequence2 = sb2.toString();
+
+        //create new array from xy pointer
+        int[][] copy = new int[xyPointer+1][2];
+        for(int k=0;k<copy.length;k++)
+        {
+            copy[k][0] = xy[k][0];
+            copy[k][1] = xy[k][1];
+        }
+
         //assign resultseq1 to query
         query = resultSequence1;
         reference = resultSequence2;
         score = String.valueOf(fMatrix[sequence1.length()][sequence2.length()]);
+        points = copy;
+
     }
 
     public int match(char a, char b)
