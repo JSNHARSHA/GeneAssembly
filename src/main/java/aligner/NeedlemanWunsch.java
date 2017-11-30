@@ -23,7 +23,36 @@ public class NeedlemanWunsch {
     }
 
 
-    public int[][] getPoints() {
+    /*public int[][] getPoints() {
+        return points;
+    }*/
+
+    public int[][] getPoints(String seq1, String seq2)
+    {
+        //assume seq 1 is along the x axis
+
+        points = new int[seq1.length()+1][2];
+        points[0][0] = 0;
+        points[0][1] = 0;
+        int x=0, y=0;
+        for(int i=0;i<seq1.length();i++)
+        {
+            if(seq1.charAt(i)=='_')
+            {
+                points[i+1][0] = x;
+                points[i+1][1] = ++y;
+            }
+            else if(seq2.charAt(i)=='_')
+            {
+                points[i+1][0] = ++x;
+                points[i+1][1] = y;
+            }
+            else
+            {
+                points[i+1][0] = ++x;
+                points[i+1][1] = ++y;
+            }
+        }
         return points;
     }
 

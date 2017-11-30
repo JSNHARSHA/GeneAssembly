@@ -60,9 +60,9 @@ public class MainClass {
             System.out.println("Alignment score " + needlemanWunsch.getScore());
 
             //Plot the graph
-            int[][] points = {{0,0}, {1,1}, {2,2}, {3,2}, {4,2}, {5,3}, {6,4}, {6,5}, {7,6}};
+            //int[][] points = {{0,0}, {1,1}, {2,2}, {3,2}, {4,2}, {5,3}, {6,4}, {6,5}, {7,6}};
             PlotGraph plotGraph = new PlotGraph();
-            plotGraph.plot(needlemanWunsch.getPoints());
+            plotGraph.plot(needlemanWunsch.getPoints(needlemanWunsch.getQuery(), needlemanWunsch.getReference()));
         }
     }
 }
