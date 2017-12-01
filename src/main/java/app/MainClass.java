@@ -56,8 +56,8 @@ public class MainClass {
         System.out.println("Set of Kmers:");
         System.out.println(kmers);
         DeBruijnGraph kmerGraph = new DeBruijnGraph(kmers);
-        System.out.println("Kmer graph:");
-        kmerGraph.print();
+        //System.out.println("Kmer graph:");
+        //kmerGraph.print();
         //check Hamiltonian circuit
 
         //generate K - 1mers
@@ -82,14 +82,15 @@ public class MainClass {
             NeedlemanWunsch needlemanWunsch = new NeedlemanWunsch();
             //pass query as first param, reference as second param
             needlemanWunsch.align(eulerPath, referenceGenome);
+            needlemanWunsch.geneticSimilarity();
             System.out.println("\nSequences after alignment: ");
             System.out.println("Original\t" + needlemanWunsch.getReference() + "\nComputed\t" + needlemanWunsch.getQuery());
-            System.out.println("Alignment score " + needlemanWunsch.getScore());
+            //System.out.println("Alignment score " + needlemanWunsch.getScore());
 
             //Plot the graph
             //int[][] points = {{0,0}, {1,1}, {2,2}, {3,2}, {4,2}, {5,3}, {6,4}, {6,5}, {7,6}};
             PlotGraph plotGraph = new PlotGraph();
-            plotGraph.plot(needlemanWunsch.getPoints(needlemanWunsch.getQuery(), needlemanWunsch.getReference()));
+            plotGraph.plot(needlemanWunsch.getPoints(needlemanWunsch.getQuery(), needlemanWunsch.getReference()), needlemanWunsch.getSimilarity());
         }
     }
 

@@ -9,6 +9,14 @@ public class NeedlemanWunsch {
     private String reference;
     private String score;
     private int[][] points;
+    private double similarity;
+
+    public double getSimilarity() {
+        return similarity;
+    }
+
+    public NeedlemanWunsch() {
+    }
 
     public String getQuery() {
         return query;
@@ -26,6 +34,21 @@ public class NeedlemanWunsch {
     /*public int[][] getPoints() {
         return points;
     }*/
+
+    public void geneticSimilarity()
+    {
+        String s1 = query;
+        String s2 = reference;
+        int hammingDistance = 0; //Stores the number of characters that did not match in two strings
+        for(int i=0; i<s1.length(); i++)
+        {
+            if(s1.charAt(i)==s2.charAt(i))
+            {
+                hammingDistance++;
+            }
+        }
+        similarity = (double)hammingDistance/s1.length();
+    }
 
     public int[][] getPoints(String seq1, String seq2)
     {
@@ -175,12 +198,12 @@ public class NeedlemanWunsch {
 
         xyPointer--;
         int shiftValue = xy[xyPointer][0];
-        System.out.println("Shift value: " + shiftValue);
+        //System.out.println("Shift value: " + shiftValue);
 
-        for(int p=0;p<xy.length;p++)
+        /*for(int p=0;p<xy.length;p++)
         {
             System.out.println(xy[p][0] + "\t" + xy[p][1]);
-        }
+        }*/
 
         StringBuffer sb1 = new StringBuffer(resultSequence1);
         sb1.reverse();
@@ -200,6 +223,7 @@ public class NeedlemanWunsch {
         //assign resultseq1 to query
         query = resultSequence1;
         reference = resultSequence2;
+
         score = String.valueOf(fMatrix[sequence1.length()][sequence2.length()]);
         points = copy;
 
