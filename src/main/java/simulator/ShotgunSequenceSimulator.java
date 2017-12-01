@@ -10,7 +10,8 @@ import java.util.Random;
 public class ShotgunSequenceSimulator implements  SequenceSimulator{
 
     @Override
-    public List<String> generateSequences(String referenceGenome, int readLength, int count) {
+    public List<String> generateSequences(String referenceGenome, int readLength, int coverage) {
+        int count = getReadCount(referenceGenome.length(), readLength, coverage);
         List<String> sequences = new ArrayList<>();
         Random rand = new Random();
         //add the prefix sequence
@@ -26,5 +27,16 @@ public class ShotgunSequenceSimulator implements  SequenceSimulator{
             i--;
         }
         return sequences;
+    }
+
+    /**
+     * computing read count
+     * @param refGenomelength
+     * @param readLength
+     * @param coverage
+     * @return
+     */
+    private int getReadCount(int refGenomelength, int readLength, int coverage) {
+        return (refGenomelength * coverage) / readLength;
     }
 }

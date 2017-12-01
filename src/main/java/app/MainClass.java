@@ -1,31 +1,58 @@
 package app;
 
+import aligner.NeedlemanWunsch;
 import assembler.DeBruijnGraph;
 import assembler.DenoSequenceAssembler;
 import assembler.SequenceProcessorUtil;
 import plotter.PlotGraph;
 import simulator.SequenceSimulator;
 import simulator.ShotgunSequenceSimulator;
-import aligner.NeedlemanWunsch;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Main class for application
  */
 public class MainClass {
+
+    //default data properties file
+    private static String propFile = "data.properties";
+
     public static void main(String args[]) {
-        //Get all the input from user
-        String referenceGenome = "GTCAGGTC";
+        //if the properties file is provided via args
+        if (args.length > 0) {
+            propFile = args[0];
+        }
+        //init properties
+        PropertyReader.init(propFile);
+        //Get reference genome from file
+        String refGenomefile = PropertyReader.getPropertyValue(Constants.GENOME_FILE_PATH);
+        String referenceGenome = null;
+        try {
+            referenceGenome = readReferenceGenome(refGenomefile);
+        } catch (IOException e) {
+            System.out.println("Error in reading ref genome from file");
+            e.printStackTrace();
+            return;
+        }
+        int refGenomeSubstrLength = Integer.parseInt(PropertyReader.getPropertyValue(Constants.GENOME_SUBSTR_LENGTH));
+        referenceGenome = referenceGenome.substring(0, refGenomeSubstrLength);
 
         //simulate shotgun sequence reads
         SequenceSimulator sequenceSimulator = new ShotgunSequenceSimulator();
-        List<String> sequences = sequenceSimulator.generateSequences(referenceGenome, 5, 4);
+        int seqReadCount = Integer.parseInt(PropertyReader.getPropertyValue(Constants.SEQ_READ_LENGTH));
+        int seqReadCoverage = Integer.parseInt(PropertyReader.getPropertyValue(Constants.SEQ_READ_COVERAGE));
+        List<String> sequences = sequenceSimulator.generateSequences(referenceGenome, seqReadCount, seqReadCoverage);
         System.out.println("Shotgun Sequence Reads:");
         System.out.println(sequences);
 
         //generate Kmers
-        List<String> kmers = SequenceProcessorUtil.generateKmers(sequences, 3);
+        int kmerLength = Integer.parseInt(PropertyReader.getPropertyValue(Constants.KMER_LENGTH));
+        List<String> kmers = SequenceProcessorUtil.generateKmers(sequences, kmerLength);
         System.out.println("Set of Kmers:");
         System.out.println(kmers);
         DeBruijnGraph kmerGraph = new DeBruijnGraph(kmers);
@@ -34,7 +61,7 @@ public class MainClass {
         //check Hamiltonian circuit
 
         //generate K - 1mers
-        List<String> subkmers = SequenceProcessorUtil.generateKmers(kmers, 2);
+        List<String> subkmers = SequenceProcessorUtil.generateKmers(kmers, kmerLength - 1);
         System.out.println("Set of K-1mers:");
         System.out.println(subkmers);
         DeBruijnGraph subkmerGraph = new DeBruijnGraph(subkmers, kmers);
@@ -64,5 +91,20 @@ public class MainClass {
             PlotGraph plotGraph = new PlotGraph();
             plotGraph.plot(needlemanWunsch.getPoints(needlemanWunsch.getQuery(), needlemanWunsch.getReference()));
         }
+    }
+
+    private static String readReferenceGenome(String fileName) throws IOException {
+        String inputSequence = "";
+        FileReader fileReader =
+                new FileReader(fileName);
+        BufferedReader bufferedReader =
+                new BufferedReader(fileReader);
+
+        String sequenceStr;
+        while((sequenceStr = bufferedReader.readLine()) != null) {
+            inputSequence += sequenceStr;
+        }
+        bufferedReader.close();
+        return inputSequence;
     }
 }

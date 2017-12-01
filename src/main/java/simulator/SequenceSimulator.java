@@ -7,8 +7,8 @@ public interface SequenceSimulator {
      * Generate random sequence reads of fixed length k
      * @param referenceGenome
      * @param readLength
-     * @param count
+     * @param coverage
      * @return
      */
-    List<String> generateSequences(String referenceGenome, int readLength, int count);
+    List<String> generateSequences(String referenceGenome, int readLength, int coverage);
 }
