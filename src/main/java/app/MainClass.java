@@ -19,10 +19,13 @@ import java.util.List;
  */
 public class MainClass {
 
+
+
     //default data properties file
     private static String propFile = "data.properties";
 
     public static void main(String args[]) {
+        long startTime = System.currentTimeMillis();
         //if the properties file is provided via args
         if (args.length > 0) {
             propFile = args[0];
@@ -42,6 +45,7 @@ public class MainClass {
         int refGenomeSubstrLength = Integer.parseInt(PropertyReader.getPropertyValue(Constants.GENOME_SUBSTR_LENGTH));
         referenceGenome = referenceGenome.substring(0, refGenomeSubstrLength);
 
+        long execStartTime = System.currentTimeMillis();
         //simulate shotgun sequence reads
         SequenceSimulator sequenceSimulator = new ShotgunSequenceSimulator();
         int seqReadCount = Integer.parseInt(PropertyReader.getPropertyValue(Constants.SEQ_READ_LENGTH));
@@ -92,6 +96,9 @@ public class MainClass {
             PlotGraph plotGraph = new PlotGraph();
             plotGraph.plot(needlemanWunsch.getPoints(needlemanWunsch.getQuery(), needlemanWunsch.getReference()), needlemanWunsch.getSimilarity());
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println("Total execution: "+(endTime - startTime) + " ms");
+        System.out.println("Logic execution: "+(endTime - execStartTime) + " ms");
     }
 
     private static String readReferenceGenome(String fileName) throws IOException {
