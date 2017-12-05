@@ -46,7 +46,8 @@ public class MainClass {
         SequenceSimulator sequenceSimulator = new ShotgunSequenceSimulator();
         int seqReadCount = Integer.parseInt(PropertyReader.getPropertyValue(Constants.SEQ_READ_LENGTH));
         int seqReadCoverage = Integer.parseInt(PropertyReader.getPropertyValue(Constants.SEQ_READ_COVERAGE));
-        List<String> sequences = sequenceSimulator.generateSequences(referenceGenome, seqReadCount, seqReadCoverage);
+        double seqBaseError = Double.parseDouble(PropertyReader.getPropertyValue(Constants.SEQ_BASE_ERROR));
+        List<String> sequences = sequenceSimulator.generateSequences(referenceGenome, seqReadCount, seqReadCoverage, seqBaseError);
         System.out.println("Shotgun Sequence Reads:");
         System.out.println(sequences);
 

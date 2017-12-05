@@ -10,5 +10,5 @@ public interface SequenceSimulator {
      * @param coverage
      * @return
      */
-    List<String> generateSequences(String referenceGenome, int readLength, int coverage);
+    List<String> generateSequences(String referenceGenome, int readLength, int coverage, double baseError);
 }
