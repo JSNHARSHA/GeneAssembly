@@ -113,8 +113,11 @@ public class DenoSequenceAssembler{
             {
                 if(!nodeFound) //No non-visited out edge found from given node
                 {
-                    startIndex = nodesInPath.get(tracker++); //Re-initialize start index to look for edges missed from any nodes already visited
-                    elementsAdded = 0; //Reset elements added to list for current start to 0
+                    if(tracker<nodesInPath.size())
+                    {
+                        startIndex = nodesInPath.get(tracker++); //Re-initialize start index to look for edges missed from any nodes already visited
+                        elementsAdded = 0; //Reset elements added to list for current start to 0
+                    }
                 }
             }
         }

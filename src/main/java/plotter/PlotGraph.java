@@ -12,9 +12,9 @@ public class PlotGraph {
         frame.setVisible(true);
         frame.setSize(1000, 1000);
 
-        int offset = 20;
+        int offset = 8;
         int startPoint = 100;
-        int dotSize = 6;
+        int dotSize = 5;
 
         JPanel panel = new JPanel() {
             @Override
